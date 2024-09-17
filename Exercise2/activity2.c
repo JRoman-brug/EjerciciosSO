@@ -75,15 +75,8 @@ int main(int argc, char **argv){
 		exit(0);
 	}
 	
-	/*
-	pid_t pid3 = fork();
-	if(pid3 == 0){
-		aux=strcat(ch,"la concha de la lora\n");
-		printf("proceso 3: %s\n",aux);
-		fputc(*aux,file);
-		exit(0);
-	}*/
 	printf("parent\n");
+	wait(NULL);
 	wait(NULL);
 	wait(NULL);
 	

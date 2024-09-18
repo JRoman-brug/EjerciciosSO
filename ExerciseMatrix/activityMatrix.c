@@ -6,12 +6,13 @@
 #include <pthread.h>
 #include <time.h>
 
-#define MAX 80
+#define MAX 20
+
+int matrix1[MAX][MAX];
+int matrix2[MAX][MAX];
+int matrixRel[MAX][MAX];
 
 typedef struct{
-	int* matrix1;
-	int* matrix2; 
-	int* matrixRel;
 	int initRow;
 	int initCol;
 	int finalRow;
@@ -19,15 +20,11 @@ typedef struct{
 	int n;
 }subMatrix_t;
 
-void initializeParams(int n, subMatrix_t* params, int* matrix1, int*matrix2, int*matrixRel){
+void initializeParams(int n, subMatrix_t* params){
 	int middle = (n/2);
 	
 	for(int i=0;i<2;i++){
 		for(int j=0;j<2;j++){
-			(*params).matrix1 = matrix1;
-			(*params).matrix2 = matrix2;
-			(*params).matrixRel = matrixRel;
-			
 			if(i==0){
 				(*params).initCol = (i*middle);			
 			}else{
@@ -69,15 +66,8 @@ void initalizeMatrix(int n,int *matrix){
 
 void* subMatrix(void* arg){	
 	subMatrix_t* param = (subMatrix_t*)arg;
-	
-	int* matrix1;
-	int* matrix2;
-	int* matrixRel;
 	int initRow, initCol, finalRow ,finalCol, n;
-	
-	matrix1 = param->matrix1;
-	matrix2 = param->matrix2;
-	matrixRel = param->matrixRel;
+
 	initRow = param->initRow; 
 	initCol = param->initCol; 
 	finalRow = param->finalRow;
@@ -88,10 +78,9 @@ void* subMatrix(void* arg){
 	int elemMatrix2;
 	for(int i=initCol;i<=finalCol;i++){
 		for(int j=initRow;j<=finalRow;j++){
-			elemMatrix1 = *((matrix1+i*n)+j);
-			elemMatrix2 = *((matrix2+i*n)+j);
-			
-			*((matrixRel+i*n)+j) = elemMatrix1+elemMatrix2;
+			elemMatrix1 = matrix1[i][j];
+			elemMatrix2 = matrix2[i][j];
+			matrixRel[i][j] = elemMatrix1+elemMatrix2;
 		}
 	}
 
@@ -118,17 +107,16 @@ void printParams(subMatrix_t* params){
 	}
 }
 
-void benchmark(int* matrix1, int *matrix2, int *matrixRel){
+void benchmark(){
 	clock_t start_time = clock();
 	
 	int elemMatrix1;
 	int elemMatrix2;
 	for(int i=0;i<MAX;i++){
 		for(int j=0;j<MAX;j++){
-			elemMatrix1 = *((matrix1+i*MAX)+j);
-			elemMatrix2 = *((matrix2+i*MAX)+j);
-			
-			*((matrixRel+i*MAX)+j) = elemMatrix1+elemMatrix2;
+			elemMatrix1 = matrix1[i][j];
+			elemMatrix2 = matrix2[i][j];
+			matrixRel[i][j] = elemMatrix1+elemMatrix2;
 		}
 	}
 	
@@ -139,9 +127,6 @@ void benchmark(int* matrix1, int *matrix2, int *matrixRel){
 int main(int argc, char **argv){
 	
 	clock_t start_time = clock();
-	int matrix1[MAX][MAX];
-	int matrix2[MAX][MAX];
-	int matrixRel[MAX][MAX];
 	
 	initalizeMatrix(MAX,(int*)matrix1);
 	initalizeMatrix(MAX,(int*)matrix2);
@@ -162,7 +147,7 @@ int main(int argc, char **argv){
 	
 	
 	subMatrix_t params[4];	
-	initializeParams(MAX,params, (int*)matrix1,(int*)matrix2,(int*)matrixRel);
+	initializeParams(MAX,params);
 	//printParams(params);
 	pthread_t threadMatrix[4];
 	

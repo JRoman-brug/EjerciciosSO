@@ -46,6 +46,7 @@ int main(int argc, char **argv){
 		fclose(file);
 		exit(0);
 	}
+	
 	pid_t pid2 = fork();
 	if(pid2 == 0){
 		printf("Process 2\n");

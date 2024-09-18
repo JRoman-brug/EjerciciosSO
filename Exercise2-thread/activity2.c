@@ -18,14 +18,14 @@ void* thread1(){
 	printf("Process 1\n");
 	
 	for(int i=0;i<100000;i++){
-		sem_wait(&semaphore);
+		//sem_wait(&semaphore);
 		z=x+y;
 		z=x-y;
 		z=x*y;
 		z=x/y;
 		
 		fprintf(file,"Operaciones aritmeticas\n");	
-		sem_post(&semaphore);
+		//sem_post(&semaphore);
 	}
 	return NULL;
 }
@@ -34,10 +34,10 @@ void* thread2(){
 	int result;
 	
 	for(int i=0;i<1000;i++){
-		sem_wait(&semaphore);
+		//sem_wait(&semaphore);
 		result = system("ls .");
 		fprintf(file,"Estoy mirando el directorio actual\n");	
-		sem_post(&semaphore);
+		//sem_post(&semaphore);
 	}
 	
 	return NULL;
@@ -45,9 +45,9 @@ void* thread2(){
 //Thread 3
 void* thread3(){
 	for(int i=0;i<20000;i++){
-		sem_wait(&semaphore);
+		//sem_wait(&semaphore);
 		fprintf(file,"El resultado es: %i\n",i);	
-		sem_post(&semaphore);
+		//sem_post(&semaphore);
 	}
 	return NULL;
 }
@@ -99,6 +99,7 @@ int main(int argc, char **argv){
 		perror("pthread_join thread2");
 		return 1;
 	}
+	fprintf(file,"Termino de escribir");
 	fclose(file);
 	sem_destroy(&semaphore);
 	printf("termino de escribir\n");

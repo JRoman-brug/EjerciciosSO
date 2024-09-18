@@ -80,6 +80,7 @@ int main(int argc, char **argv){
 	wait(NULL);
 	wait(NULL);
 	
+	fprintf(file,"Termino de escribir \n");	
 	fclose(file);
 	sem_destroy(&semaphore);
 	printf("termino de escribir\n");
